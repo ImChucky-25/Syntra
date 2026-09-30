@@ -224,6 +224,9 @@ model AgentRun {
   completedAt     DateTime?
   /// cooperative cancellation flag, checked between steps (spec §7.1)
   cancelRequested Boolean   @default(false)
+  /// Snapshot (transcript, budget, counters) taken when paused for approval,
+  /// consumed by resumeAgentRun; null for runs never paused.
+  transcript      Json?
 
   user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   agent          Agent           @relation(fields: [agentId], references: [id])

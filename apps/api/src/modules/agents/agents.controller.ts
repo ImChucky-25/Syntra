@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { prisma } from '../../lib/prisma.js';
 import { NotFoundError, ValidationError } from '../../lib/errors.js';
 import { startAgentRunSchema, toolDecisionSchema } from '@ai-zone/validation';
-import { executeAgentRun, requestCancel } from './agent-runtime.js';
+import { executeAgentRun, requestCancel, resumeAgentRun } from './agent-runtime.js';
 import { parseToolPolicy } from './tool-policy.js';
 
 /** GET /api/v1/agents — public catalog of enabled agents with sanitized policies. */
@@ -151,7 +151,6 @@ export async function decideTool(req: Request, res: Response, next: NextFunction
     if (!exec) throw new NotFoundError('Pending tool execution not found');
 
     if (parsed.data.decision === 'approve') {
-      // Mark approved; execution is performed when the run is resumed.
       await prisma.toolExecution.update({
         where: { id: exec.id },
         data: { approvalStatus: 'APPROVED' },
@@ -162,7 +161,25 @@ export async function decideTool(req: Request, res: Response, next: NextFunction
         data: { approvalStatus: 'REJECTED', status: 'FAILED', error: 'rejected by user' },
       });
     }
-    res.json({ ok: true, decision: parsed.data.decision });
+
+    // Once every pending tool has a decision, resume the paused run.
+    const undecided = await prisma.toolExecution.count({
+      where: { runId: run.id, approvalStatus: 'PENDING' },
+    });
+    if (undecided > 0) {
+      res.status(202).json({
+        ok: true,
+        decision: parsed.data.decision,
+        run: { id: run.id, status: 'AWAITING_APPROVAL', undecided },
+      });
+      return;
+    }
+    const result = await resumeAgentRun(run.id, user.id);
+    res.json({
+      ok: true,
+      decision: parsed.data.decision,
+      run: { id: run.id, status: result?.status ?? 'COMPLETED', output: result?.output ?? null },
+    });
   } catch (err) {
     next(err);
   }
