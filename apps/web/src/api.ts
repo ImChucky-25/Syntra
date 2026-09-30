@@ -33,9 +33,6 @@ export const api = {
 
   me: () => request<{ user: UserDto }>('/auth/me'),
 
-  listConversations: () =>
-    request<{ conversations: Array<{ id: string; title: string; messageCount: number; updatedAt: string }> }>('/conversations'),
-
   createConversation: () => request<{ conversation: { id: string; title: string } }>('/conversations', { method: 'POST', body: '{}' }),
 
   getConversation: (id: string) =>
@@ -55,7 +52,47 @@ export const api = {
       method: 'PATCH',
       body: JSON.stringify(data),
     }),
+
+  listConversations: (q?: string) =>
+    request<{ conversations: Array<{ id: string; title: string; messageCount: number; updatedAt: string }> }>(
+      `/conversations${q ? `?q=${encodeURIComponent(q)}` : ''}`,
+    ),
+
+  uploadFile: async (file: File) => {
+    const form = new FormData();
+    form.append('file', file);
+    const res = await fetch(`${BASE}/files`, {
+      method: 'POST',
+      credentials: 'include',
+      body: form,
+    });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      throw new Error((body as { error?: { message?: string } }).error?.message ?? `Upload failed (${res.status})`);
+    }
+    return body as { file: FileDto };
+  },
+
+  listFiles: () => request<{ files: FileDto[] }>('/files'),
+
+  deleteFile: (id: string) => request<{ ok: boolean }>(`/files/${id}`, { method: 'DELETE' }),
+
+  analyzeDocument: (id: string, data: { task: 'summarize' | 'extract' | 'question' | 'compare'; question?: string }) =>
+    request<{ analysis: { answer: string; model: string; task: string } }>(`/documents/${id}/analyze`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
 };
+
+export interface FileDto {
+  id: string;
+  filename: string;
+  mimeType: string;
+  sizeBytes: number;
+  status: string;
+  charCount: number | null;
+  createdAt: string;
+}
 
 export interface ChatStreamHandlers {
   onMeta?: (e: { conversationId: string; model: string }) => void;

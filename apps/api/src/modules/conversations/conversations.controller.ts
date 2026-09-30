@@ -6,8 +6,21 @@ import { createConversationSchema, updateConversationSchema } from '@ai-zone/val
 export async function listConversations(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     if (!req.user) throw new NotFoundError('Unauthorized');
+    // History search (spec §4.1): q matches titles and message content.
+    const q = typeof req.query.q === 'string' ? req.query.q.trim().slice(0, 120) : '';
     const conversations = await prisma.conversation.findMany({
-      where: { userId: req.user.id, deletedAt: null },
+      where: {
+        userId: req.user.id,
+        deletedAt: null,
+        ...(q
+          ? {
+              OR: [
+                { title: { contains: q, mode: 'insensitive' as const } },
+                { messages: { some: { content: { contains: q, mode: 'insensitive' as const } } } },
+              ],
+            }
+          : {}),
+      },
       orderBy: { updatedAt: 'desc' },
       take: 100,
       include: { _count: { select: { messages: true } } },

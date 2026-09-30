@@ -10,6 +10,8 @@ import { getUsageSummary } from './modules/usage/usage.controller.js';
 import { getPreferences, updatePreferences } from './modules/preferences/preferences.controller.js';
 import agentsRoutes from './modules/agents/agents.routes.js';
 import runsRoutes from './modules/agents/runs.routes.js';
+import filesRoutes from './modules/files/files.routes.js';
+import { analyzeDocument } from './modules/files/documents.controller.js';
 import { handleChatStream } from './modules/ai/chat.controller.js';
 import { requireAuth } from './middleware/auth.middleware.js';
 import { rateLimit } from './middleware/rate-limit.js';
@@ -43,6 +45,8 @@ export function createApp(): express.Express {
   v1.patch('/preferences', requireAuth, updatePreferences);
   v1.use('/agents', agentsRoutes);
   v1.use('/runs', runsRoutes);
+  v1.use('/files', filesRoutes);
+  v1.post('/documents/:id/analyze', requireAuth, analyzeDocument);
   v1.post('/chat/stream', requireAuth, rateLimit({ windowMs: 60_000, max: 30, name: 'chat' }), handleChatStream);
 
   app.use('/api/v1', v1);

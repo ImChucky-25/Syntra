@@ -170,15 +170,20 @@ model UsageRecord {
 }
 
 model File {
-  id         String     @id @default(uuid())
-  userId     String
-  storageKey String
-  mimeType   String
-  sizeBytes  Int
-  status     FileStatus @default(PENDING)
-  createdAt  DateTime   @default(now())
+  id            String     @id @default(uuid())
+  userId        String
+  filename      String
+  storageKey    String
+  mimeType      String
+  sizeBytes     Int
+  status        FileStatus @default(PENDING)
+  extractedText String?    @db.Text
+  charCount     Int?
+  error         String?
+  createdAt     DateTime   @default(now())
 
   @@index([userId])
+  @@index([userId, createdAt])
 }
 
 model UserPreference {

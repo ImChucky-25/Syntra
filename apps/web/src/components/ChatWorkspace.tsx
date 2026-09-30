@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { api, streamChat, type UserDto } from '../api';
 import ModelHub from './ModelHub';
+import Documents from './Documents';
 
-type View = 'chat' | 'model-hub';
+type View = 'chat' | 'model-hub' | 'documents';
 
 interface Message {
   id: string;
@@ -35,20 +36,26 @@ export default function ChatWorkspace({ user, onSignOut }: { user: UserDto; onSi
   const [modelKey, setModelKey] = useState(''); // '' = auto
   const [error, setError] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [search, setSearch] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
   const abortRef = useRef<AbortController | null>(null);
 
   const refreshConversations = useCallback(async () => {
     try {
-      const res = await api.listConversations();
+      const res = await api.listConversations(search.trim() || undefined);
       setConversations(res.conversations);
     } catch {
       /* transient */
     }
-  }, []);
+  }, [search]);
 
   useEffect(() => {
-    void refreshConversations();
+    // Debounced history search (spec §4.1): fires on query change and on mount.
+    const t = setTimeout(() => void refreshConversations(), 250);
+    return () => clearTimeout(t);
+  }, [refreshConversations]);
+
+  useEffect(() => {
     api
       .listModels()
       .then((r) => setModels(r.models))
@@ -178,6 +185,14 @@ export default function ChatWorkspace({ user, onSignOut }: { user: UserDto; onSi
     );
   }
 
+  if (view === 'documents') {
+    return (
+      <div className="flex h-screen flex-col bg-slate-950 text-slate-100">
+        <Documents onBack={() => setView('chat')} />
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen">
       {/* Mobile backdrop */}
@@ -205,7 +220,7 @@ export default function ChatWorkspace({ user, onSignOut }: { user: UserDto; onSi
         >
           + New chat
         </button>
-        <nav className="px-4 pb-2">
+        <nav className="space-y-1 px-4 pb-2">
           <button
             onClick={() => {
               setView('model-hub');
@@ -215,7 +230,24 @@ export default function ChatWorkspace({ user, onSignOut }: { user: UserDto; onSi
           >
             <span aria-hidden="true">🧭</span> Model Hub
           </button>
+          <button
+            onClick={() => {
+              setView('documents');
+              setSidebarOpen(false);
+            }}
+            className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-slate-800"
+          >
+            <span aria-hidden="true">📄</span> Documents
+          </button>
         </nav>
+        <div className="px-4 pb-2">
+          <input
+            className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs outline-none focus:border-indigo-500"
+            placeholder="Search conversations…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
         <div className="flex-1 overflow-y-auto px-2 pb-4">
           {conversations.map((c) => (
             <div
