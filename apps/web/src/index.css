@@ -8,6 +8,33 @@ body {
   @apply bg-slate-950 text-slate-100 antialiased;
 }
 
+::selection {
+  @apply bg-slate-600 text-white;
+}
+
+:focus-visible {
+  @apply outline outline-2 outline-offset-2 outline-slate-400;
+}
+
+* {
+  scrollbar-color: #3f3f46 #09090b;
+  scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #09090b;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background: #3f3f46;
+}
+
 /* Assistant Markdown body (spec §4.1: code blocks + Markdown) */
 .md-body > :first-child { margin-top: 0; }
 .md-body > :last-child { margin-bottom: 0; }

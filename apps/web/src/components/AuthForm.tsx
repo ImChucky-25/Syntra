@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { api, type UserDto } from '../api';
+import syntraLogo from '../../img/Syntra Logo.jpg';
 
 export default function AuthForm({ onAuthed }: { onAuthed: (u: UserDto) => void }) {
   const [mode, setMode] = useState<'login' | 'register'>('login');
@@ -28,7 +29,10 @@ export default function AuthForm({ onAuthed }: { onAuthed: (u: UserDto) => void 
 
   return (
     <div className="w-full max-w-sm rounded-xl border border-slate-800 bg-slate-900 p-6 shadow-xl">
-      <h1 className="mb-1 text-2xl font-bold tracking-tight">Syntra</h1>
+      <div className="mb-1 flex items-center gap-2">
+        <img src={syntraLogo} alt="" className="h-8 w-8 rounded-lg object-cover" />
+        <h1 className="text-2xl font-bold tracking-tight">Syntra</h1>
+      </div>
       <p className="mb-6 text-sm text-slate-400">
         {mode === 'login' ? 'Sign in to your workspace' : 'Create your account'}
       </p>

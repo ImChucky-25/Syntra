@@ -1,3 +1,5 @@
+import syntraLogo from '../../img/Syntra Logo.jpg';
+
 interface LandingProps {
   onEnter: () => void;
 }
@@ -88,7 +90,7 @@ export default function Landing({ onEnter }: LandingProps) {
       {/* Nav */}
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
         <div className="flex items-center gap-2">
-          <span className="text-xl" aria-hidden="true">✳</span>
+          <img src={syntraLogo} alt="" className="h-8 w-8 shrink-0 rounded-lg object-cover" />
           <span className="text-lg font-bold tracking-tight">Syntra</span>
         </div>
         <nav className="hidden items-center gap-6 text-sm text-slate-400 md:flex">
