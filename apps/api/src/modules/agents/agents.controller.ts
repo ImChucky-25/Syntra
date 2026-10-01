@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { prisma } from '../../lib/prisma.js';
 import { NotFoundError, ValidationError } from '../../lib/errors.js';
-import { startAgentRunSchema, toolDecisionSchema } from '@ai-zone/validation';
+import { startAgentRunSchema, toolDecisionSchema } from '@syntra/validation';
 import { executeAgentRun, requestCancel, resumeAgentRun } from './agent-runtime.js';
 import { parseToolPolicy } from './tool-policy.js';
 

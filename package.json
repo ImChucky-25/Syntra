@@ -1,5 +1,5 @@
 {
-  "name": "ai-zone",
+  "name": "syntra",
   "version": "0.1.0",
   "private": true,
   "description": "Syntra — provider-neutral multi-model AI platform (Phase 1)",
@@ -10,15 +10,18 @@
   "engines": {
     "node": ">=20"
   },
+  "devDependencies": {
+    "vite": "^6.0.7"
+  },
   "scripts": {
-    "build": "npm run build --workspace @ai-zone/shared-types && npm run build --workspace @ai-zone/validation && npm run build --workspace @ai-zone/api && npm run build --workspace @ai-zone/web",
+    "build": "npm run build --workspace @syntra/shared-types && npm run build --workspace @syntra/validation && npm run build --workspace @syntra/api && npm run build --workspace @syntra/web",
     "typecheck": "npm run typecheck --workspaces --if-present",
-    "test": "npm run test --workspace @ai-zone/api",
-    "dev:api": "npm run dev --workspace @ai-zone/api",
-    "dev:web": "npm run dev --workspace @ai-zone/web",
-    "db:generate": "npm run db:generate --workspace @ai-zone/api",
-    "db:migrate": "npm run db:migrate --workspace @ai-zone/api",
-    "db:seed": "npm run db:seed --workspace @ai-zone/api",
+    "test": "npm run test --workspace @syntra/api",
+    "dev:api": "npm run dev --workspace @syntra/api",
+    "dev:web": "npm run dev --workspace @syntra/web",
+    "db:generate": "npm run db:generate --workspace @syntra/api",
+    "db:migrate": "npm run db:migrate --workspace @syntra/api",
+    "db:seed": "npm run db:seed --workspace @syntra/api",
     "smoke": "node infrastructure/smoke.mjs",
     "smoke:load": "node infrastructure/smoke.mjs --requests 200 --concurrency 20"
   }

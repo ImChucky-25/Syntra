@@ -1,5 +1,5 @@
 {
-  "name": "@ai-zone/api",
+  "name": "@syntra/api",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -18,8 +18,8 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
-    "@ai-zone/shared-types": "*",
-    "@ai-zone/validation": "*",
+    "@syntra/shared-types": "*",
+    "@syntra/validation": "*",
     "@anthropic-ai/sdk": "^0.129.0",
     "@prisma/client": "^6.2.0",
     "argon2": "^0.41.1",

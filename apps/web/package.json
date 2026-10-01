@@ -1,5 +1,5 @@
 {
-  "name": "@ai-zone/web",
+  "name": "@syntra/web",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -10,7 +10,7 @@
     "typecheck": "tsc -b --noEmit 2>/dev/null || tsc --noEmit -p tsconfig.app.json"
   },
   "dependencies": {
-    "@ai-zone/shared-types": "*",
+    "@syntra/shared-types": "*",
     "highlight.js": "^11.12.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

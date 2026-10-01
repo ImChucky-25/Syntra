@@ -4,7 +4,7 @@ import path from 'node:path';
 import fs from 'node:fs/promises';
 import { LocalFileStorage } from './storage.js';
 
-const tmpRoot = path.join(os.tmpdir(), `ai-zone-storage-test-${Date.now()}`);
+const tmpRoot = path.join(os.tmpdir(), `syntra-storage-test-${Date.now()}`);
 const storage = new LocalFileStorage(tmpRoot);
 
 afterAll(async () => {

@@ -4,7 +4,7 @@ import { prisma } from '../../lib/prisma.js';
 import { NotFoundError, ProviderError } from '../../lib/errors.js';
 import { rankModels } from './model-router.js';
 import { buildModelMessages, estimateTokens } from './context-manager.js';
-import type { ChatMessage } from '@ai-zone/shared-types';
+import type { ChatMessage } from '@syntra/shared-types';
 
 export interface ChatContext {
   conversation: Conversation;

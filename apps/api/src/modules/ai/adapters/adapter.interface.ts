@@ -1,4 +1,4 @@
-import type { ChatMessage } from '@ai-zone/shared-types';
+import type { ChatMessage } from '@syntra/shared-types';
 
 export interface GenerateInput {
   messages: ChatMessage[];

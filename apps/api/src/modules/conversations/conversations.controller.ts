@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import { prisma } from '../../lib/prisma.js';
 import { NotFoundError, ValidationError } from '../../lib/errors.js';
-import { createConversationSchema, updateConversationSchema } from '@ai-zone/validation';
+import { createConversationSchema, updateConversationSchema } from '@syntra/validation';
 
 export async function listConversations(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {

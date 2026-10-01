@@ -1,4 +1,4 @@
-import type { ModelDescriptor } from '@ai-zone/shared-types';
+import type { ModelDescriptor } from '@syntra/shared-types';
 
 const BASE = '/api/v1';
 

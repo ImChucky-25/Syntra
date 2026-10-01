@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api';
-import type { ModelDescriptor } from '@ai-zone/shared-types';
+import type { ModelDescriptor } from '@syntra/shared-types';
 
 const CAPABILITY_LABELS: Record<string, string> = {
   chat: 'Chat',

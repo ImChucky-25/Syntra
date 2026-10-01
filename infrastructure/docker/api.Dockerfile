@@ -14,9 +14,9 @@ COPY tsconfig.base.json ./
 COPY packages/ packages/
 COPY apps/api/ apps/api/
 # shared-types has a build step the API's types resolution relies on
-RUN npm run build --workspace @ai-zone/shared-types \
+RUN npm run build --workspace @syntra/shared-types \
  && cd apps/api && npx prisma generate && cd ../.. \
- && npm run build --workspace @ai-zone/api
+ && npm run build --workspace @syntra/api
 
 FROM node:22-alpine
 WORKDIR /app

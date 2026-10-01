@@ -11,7 +11,7 @@ import { parseToolPolicy, checkToolPermission, ToolCallBudget, type ToolPolicy }
 import { getTool } from './tools/tool.registry.js';
 import type { ToolDefinition } from './tools/tool.types.js';
 import { parseRunTranscript, toolContractMessage, type RunTranscript } from './run-transcript.js';
-import type { ChatMessage } from '@ai-zone/shared-types';
+import type { ChatMessage } from '@syntra/shared-types';
 import type { AiModel, AiProvider, Agent } from '@prisma/client';
 import { env } from '../../config/env.js';
 import { logger } from '../../lib/logger.js';

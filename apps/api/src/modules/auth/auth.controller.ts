@@ -3,7 +3,7 @@ import { prisma } from '../../lib/prisma.js';
 import { hashPassword, verifyPassword } from './password.service.js';
 import { createSession, signAccessToken, revokeSession } from './token.service.js';
 import { ValidationError, AuthError } from '../../lib/errors.js';
-import { registerSchema, loginSchema } from '@ai-zone/validation';
+import { registerSchema, loginSchema } from '@syntra/validation';
 
 const COOKIE_NAME = 'ai_zone_token';
 

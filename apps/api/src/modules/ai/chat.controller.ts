@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
 import type { Request, Response } from 'express';
-import type { ChatStreamEvent } from '@ai-zone/shared-types';
+import type { ChatStreamEvent } from '@syntra/shared-types';
 import { buildChatContext, loadConversationForUser } from './chat.service.js';
 import { getAdapterForProvider } from './adapter-registry.js';
 import { recordUsage } from './usage-tracker.js';

@@ -11,8 +11,8 @@ RUN npm ci
 COPY tsconfig.base.json ./
 COPY packages/ packages/
 COPY apps/web/ apps/web/
-RUN npm run build --workspace @ai-zone/shared-types \
- && npm run build --workspace @ai-zone/web
+RUN npm run build --workspace @syntra/shared-types \
+ && npm run build --workspace @syntra/web
 
 FROM nginx:1.27-alpine
 COPY --from=build /app/apps/web/dist /usr/share/nginx/html
