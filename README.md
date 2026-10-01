@@ -3,7 +3,7 @@
 Provider-neutral multi-model AI platform — **Phase 1 complete (spec Milestones 1–8)**.
 
 AI Zone is an independently owned AI workspace: chat, agents, documents, and usage
-billing unified behind one backend, where AI providers (OpenAI, Anthropic, DeepSeek)
+billing unified behind one backend, where AI providers (OpenAI, Anthropic, DeepSeek, Gemini)
 are interchangeable pluggable adapters — never a hard dependency. The platform owns
 the product logic, data, security, and orchestration; the models are swappable.
 
@@ -14,7 +14,7 @@ the product logic, data, security, and orchestration; the models are swappable.
 | 1 — Foundation | Monorepo, TS config, health endpoint, dev docs | ✅ |
 | 2 — Accounts | Auth (Argon2id + JWT), conversations, persistent history | ✅ |
 | 3 — AI orchestration | Adapter interface, streaming, usage recording | ✅ |
-| 4 — Model hub | **3 providers** (OpenAI, Anthropic, DeepSeek), capability routing, user default model, Model Hub UI | ✅ |
+| 4 — Model hub | **4 providers** (OpenAI, Anthropic, DeepSeek, Gemini), capability routing, user default model, Model Hub UI | ✅ |
 | 5 — Agent framework | Versioned agents, tool contracts + permission policy, bounded run loop, status/cancel/**approval-resume** | ✅ |
 | 6 — Files & documents | Secure uploads (magic-byte validation), PDF/DOCX/text extraction, Document Intelligence, history search | ✅ |
 | 7 — Billing & admin | Free/Pro/Team plans with server-side enforcement, usage reports, admin console | ✅ |
@@ -26,8 +26,8 @@ security smoke (ownership, authz, rate limits, upload caps) · live load probe
 
 ## Features
 
-- **Multi-provider chat** — one interface over OpenAI, Anthropic, and DeepSeek
-  (DeepSeek reuses the OpenAI-compatible adapter). Manual selection or
+- **Multi-provider chat** — one interface over OpenAI, Anthropic, DeepSeek, and Gemini
+  (DeepSeek and Gemini reuse the OpenAI-compatible adapter). Manual selection or
   capability/cost-based auto-routing; streaming over SSE with stop button.
 - **Agents with guardrails** — general, coding, research, document, writing agents.
   Tools (calculator, datetime, text stats, uuid, JSON) run only through a permission
@@ -66,9 +66,15 @@ apps/api/prisma/ Schema, migrations, seed (models, agents, plans)
 | OpenAI | gpt-4o, gpt-4o-mini | `openai` |
 | Anthropic | Claude 3.5 Sonnet, Claude 3.5 Haiku | `anthropic` (supports `ANTHROPIC_WORKSPACE_ID` for unscoped keys) |
 | DeepSeek | DeepSeek V3 (chat), DeepSeek R1 (reasoner) | OpenAI-compatible reuse |
+| Gemini | Gemini 3.8 Flash, Gemini 3.5 Flash Lite | OpenAI-compatible reuse |
 
 Pricing per model is stored in the DB (versioned) — cost math reads it at request
 time, never from hardcoded rates.
+
+**Live verification:** all four providers are confirmed against their production APIs —
+Gemini verified end-to-end (real streaming completions with tokens and cost recorded),
+Anthropic and DeepSeek verified authenticated (completions pending account credit),
+OpenAI code path verified pending its API key.
 
 ## Quick start (local)
 
