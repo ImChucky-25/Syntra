@@ -43,6 +43,9 @@ export default function ChatWorkspace({ user, onSignOut }: { user: UserDto; onSi
   const [streamingMessageId, setStreamingMessageId] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const abortRef = useRef<AbortController | null>(null);
+  // Auto-scroll sticks only while the reader is near the bottom (§4.1 UX):
+  // scrolling up to read pauses it; sending or opening a chat re-engages it.
+  const stickToBottomRef = useRef(true);
 
   const refreshConversations = useCallback(async () => {
     try {
@@ -73,12 +76,22 @@ export default function ChatWorkspace({ user, onSignOut }: { user: UserDto; onSi
   }, [refreshConversations]);
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
+    if (stickToBottomRef.current) {
+      scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
+    }
   }, [messages]);
+
+  const handleScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    stickToBottomRef.current = distanceFromBottom < 120;
+  }, []);
 
   const openConversation = useCallback(async (id: string) => {
     setError(null);
     setSidebarOpen(false);
+    stickToBottomRef.current = true;
     try {
       const res = await api.getConversation(id);
       setActiveId(id);
@@ -99,6 +112,7 @@ export default function ChatWorkspace({ user, onSignOut }: { user: UserDto; onSi
       setError(null);
       setStreaming(true);
       setInput('');
+      stickToBottomRef.current = true;
 
       let convId = activeId;
       const tempUserId = `tmp-u-${Date.now()}`;
@@ -345,7 +359,7 @@ export default function ChatWorkspace({ user, onSignOut }: { user: UserDto; onSi
           </select>
         </header>
 
-        <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto px-4 py-6">
+        <div ref={scrollRef} onScroll={handleScroll} className="flex-1 space-y-4 overflow-y-auto px-4 py-6">
           {messages.length === 0 && (
             <div className="mt-24 text-center text-slate-500">
               <p className="text-3xl">✳</p>
