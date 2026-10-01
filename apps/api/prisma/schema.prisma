@@ -1,4 +1,4 @@
-// AI Zone — Phase 1 database schema (spec §10)
+// Syntra — Phase 1 database schema (spec §10)
 // UUID PKs, timestamps, indexes, FK constraints per §10.3.
 
 generator client {

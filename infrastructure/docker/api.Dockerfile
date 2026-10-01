@@ -1,4 +1,4 @@
-# AI Zone API — multi-stage build (spec §16: reproducible environments)
+# Syntra API — multi-stage build (spec §16: reproducible environments)
 FROM node:22-alpine AS build
 WORKDIR /app
 
@@ -22,7 +22,7 @@ FROM node:22-alpine
 WORKDIR /app
 ENV NODE_ENV=production
 
-RUN addgroup -S aizone && adduser -S aizone -G aizone
+RUN addgroup -S syntra && adduser -S syntra -G syntra
 
 COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/node_modules ./node_modules
@@ -31,7 +31,7 @@ COPY --from=build /app/apps/api/package.json ./apps/api/package.json
 COPY --from=build /app/apps/api/dist ./apps/api/dist
 COPY --from=build /app/apps/api/prisma ./apps/api/prisma
 
-USER aizone
+USER syntra
 WORKDIR /app/apps/api
 EXPOSE 4000
 

@@ -247,7 +247,7 @@ export default function ChatWorkspace({ user, onSignOut }: { user: UserDto; onSi
         }`}
       >
         <div className="p-4">
-          <h1 className="text-lg font-bold">AI Zone</h1>
+          <h1 className="text-lg font-bold">Syntra</h1>
           <p className="text-xs text-slate-500">{user.email}</p>
         </div>
         <button
@@ -405,7 +405,7 @@ export default function ChatWorkspace({ user, onSignOut }: { user: UserDto; onSi
           <div className="mx-auto flex max-w-3xl gap-2">
             <input
               className="flex-1 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2.5 text-sm outline-none focus:border-indigo-500"
-              placeholder={`Message AI Zone… (${activeModelLabel})`}
+              placeholder={`Message Syntra… (${activeModelLabel})`}
               value={input}
               onChange={(e) => setInput(e.target.value)}
             />

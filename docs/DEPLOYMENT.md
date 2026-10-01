@@ -1,4 +1,4 @@
-# AI Zone — Deployment & Operations (spec §16)
+# Syntra — Deployment & Operations (spec §16)
 
 ## Environments
 

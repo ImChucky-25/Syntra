@@ -1,5 +1,5 @@
 /**
- * AI Zone request validation schemas — shared by API (request validation)
+ * Syntra request validation schemas — shared by API (request validation)
  * and web (form validation). Single source of truth per the spec (§5, §9).
  */
 import { z } from 'zod';

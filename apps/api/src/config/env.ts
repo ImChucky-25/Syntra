@@ -26,10 +26,10 @@ function read(name: string, fallback?: string): string {
 function warnIfNeeded(name: string, value: string): void {
   // Surface weak security-critical values early instead of failing hard in dev.
   if (name === 'JWT_SECRET' && (value === 'change-me-to-a-long-random-secret' || value.length < 32)) {
-    console.warn('[ai-zone] WARNING: JWT_SECRET is missing or too short — generate one for real use.');
+    console.warn('[syntra] WARNING: JWT_SECRET is missing or too short — generate one for real use.');
   }
   if (name === 'OPENAI_API_KEY' && !value) {
-    console.warn('[ai-zone] OPENAI_API_KEY is not set — chat requests will fail until a key is configured.');
+    console.warn('[syntra] OPENAI_API_KEY is not set — chat requests will fail until a key is configured.');
   }
 }
 

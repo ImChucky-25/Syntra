@@ -28,7 +28,7 @@ export default function AuthForm({ onAuthed }: { onAuthed: (u: UserDto) => void 
 
   return (
     <div className="w-full max-w-sm rounded-xl border border-slate-800 bg-slate-900 p-6 shadow-xl">
-      <h1 className="mb-1 text-2xl font-bold tracking-tight">AI Zone</h1>
+      <h1 className="mb-1 text-2xl font-bold tracking-tight">Syntra</h1>
       <p className="mb-6 text-sm text-slate-400">
         {mode === 'login' ? 'Sign in to your workspace' : 'Create your account'}
       </p>

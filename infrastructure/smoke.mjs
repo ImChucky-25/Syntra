@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * AI Zone smoke + load probe (spec §15 performance testing, §16 deploy checks).
+ * Syntra smoke + load probe (spec §15 performance testing, §16 deploy checks).
  * No dependencies. Usage:
  *   BASE_URL=http://localhost:4000 node infrastructure/smoke.mjs
  *   LOAD_REQUESTS=100 LOAD_CONCURRENCY=10 BASE_URL=... node infrastructure/smoke.mjs

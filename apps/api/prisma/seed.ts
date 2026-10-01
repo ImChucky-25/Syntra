@@ -254,7 +254,7 @@ async function seedAgents(): Promise<void> {
       key: 'general',
       name: 'General Assistant',
       instructions:
-        'You are AI Zone\'s general assistant. Answer clearly and concisely. Use the datetime tool when current time matters; otherwise answer directly.',
+        'You are Syntra\'s general assistant. Answer clearly and concisely. Use the datetime tool when current time matters; otherwise answer directly.',
       toolPolicy: {
         allow: ['datetime', 'calculator', 'text_stats'],
         requireApproval: [],
@@ -266,7 +266,7 @@ async function seedAgents(): Promise<void> {
       key: 'coding',
       name: 'Coding Agent',
       instructions:
-        'You are AI Zone\'s coding agent. Explain, generate, debug, and refactor code. Show code in fenced blocks. Use calculator or json_format when they help verify output; say clearly when you have not run any code.',
+        'You are Syntra\'s coding agent. Explain, generate, debug, and refactor code. Show code in fenced blocks. Use calculator or json_format when they help verify output; say clearly when you have not run any code.',
       toolPolicy: {
         allow: ['calculator', 'json_format', 'text_stats', 'uuid'],
         requireApproval: [],
@@ -278,7 +278,7 @@ async function seedAgents(): Promise<void> {
       key: 'research',
       name: 'Research Agent',
       instructions:
-        'You are AI Zone\'s research agent. Structure findings as evidence then analysis, and clearly distinguish sourced facts from your own reasoning. You have no web tool in this environment, so say when an answer would need external sources.',
+        'You are Syntra\'s research agent. Structure findings as evidence then analysis, and clearly distinguish sourced facts from your own reasoning. You have no web tool in this environment, so say when an answer would need external sources.',
       toolPolicy: {
         allow: ['datetime', 'text_stats'],
         requireApproval: [],
@@ -290,7 +290,7 @@ async function seedAgents(): Promise<void> {
       key: 'document',
       name: 'Document Agent',
       instructions:
-        'You are AI Zone\'s document agent. Summarize, extract, and compare documents the user pastes into the conversation. Use text_stats for length-sensitive summaries.',
+        'You are Syntra\'s document agent. Summarize, extract, and compare documents the user pastes into the conversation. Use text_stats for length-sensitive summaries.',
       toolPolicy: {
         allow: ['text_stats'],
         requireApproval: [],
@@ -302,7 +302,7 @@ async function seedAgents(): Promise<void> {
       key: 'writing',
       name: 'Writing Agent',
       instructions:
-        'You are AI Zone\'s writing agent. Draft and edit professional prose. Use text_stats to check length constraints the user gives you.',
+        'You are Syntra\'s writing agent. Draft and edit professional prose. Use text_stats to check length constraints the user gives you.',
       toolPolicy: {
         allow: ['text_stats', 'datetime'],
         requireApproval: [],

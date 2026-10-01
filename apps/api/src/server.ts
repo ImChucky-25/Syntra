@@ -6,7 +6,7 @@ import { prisma } from './lib/prisma.js';
 const app = createApp();
 
 const server = app.listen(env.port, () => {
-  logger.info(`AI Zone API listening on http://localhost:${env.port} (${env.nodeEnv})`);
+  logger.info(`Syntra API listening on http://localhost:${env.port} (${env.nodeEnv})`);
 });
 
 async function shutdown(signal: string): Promise<void> {

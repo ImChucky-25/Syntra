@@ -1,8 +1,8 @@
-# AI Zone
+# Syntra
 
 Provider-neutral multi-model AI platform — **Phase 1 complete (spec Milestones 1–8)**.
 
-AI Zone is an independently owned AI workspace: chat, agents, documents, and usage
+Syntra is an independently owned AI workspace: chat, agents, documents, and usage
 billing unified behind one backend, where AI providers (OpenAI, Anthropic, DeepSeek, Gemini)
 are interchangeable pluggable adapters — never a hard dependency. The platform owns
 the product logic, data, security, and orchestration; the models are swappable.
@@ -118,7 +118,7 @@ never shipped to the browser. `ANTHROPIC_WORKSPACE_ID` is required for unscoped
 
 ## Spec
 
-Implemented from the AI Zone Developer Technical Specification v1.0
+Implemented from the Syntra Developer Technical Specification v1.0
 (`spec/` blueprint): Phase 1 = platform foundation on external model APIs;
 Phase 2 (future) = self-hosted/fine-tuned models behind the same adapter
 interface.

@@ -89,7 +89,7 @@ export default function Landing({ onEnter }: LandingProps) {
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
         <div className="flex items-center gap-2">
           <span className="text-xl" aria-hidden="true">✳</span>
-          <span className="text-lg font-bold tracking-tight">AI Zone</span>
+          <span className="text-lg font-bold tracking-tight">Syntra</span>
         </div>
         <nav className="hidden items-center gap-6 text-sm text-slate-400 md:flex">
           <a href="#features" className="hover:text-slate-200">Features</a>
@@ -117,7 +117,7 @@ export default function Landing({ onEnter }: LandingProps) {
           </span>
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-base text-slate-400 md:text-lg">
-          AI Zone unifies chat, coding, research, documents, and writing agents behind one interface —
+          Syntra unifies chat, coding, research, documents, and writing agents behind one interface —
           with model routing, usage limits, and guardrails that keep you in control.
           Your data, your rules; the models are interchangeable.
         </p>
@@ -153,7 +153,7 @@ export default function Landing({ onEnter }: LandingProps) {
       <section id="features" className="mx-auto max-w-6xl px-6 py-20">
         <h2 className="text-center text-2xl font-bold tracking-tight md:text-3xl">Built for real work</h2>
         <p className="mx-auto mt-3 max-w-xl text-center text-sm text-slate-400">
-          Everything below runs on the AI Zone backend — models are just providers.
+          Everything below runs on the Syntra backend — models are just providers.
         </p>
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {FEATURES.map((f) => (
@@ -223,7 +223,7 @@ export default function Landing({ onEnter }: LandingProps) {
 
       {/* Footer */}
       <footer className="border-t border-slate-800 py-8 text-center text-xs text-slate-600">
-        AI Zone — provider-neutral multi-model platform · Prompts and files are processed by the selected model provider under its terms.
+        Syntra — provider-neutral multi-model platform · Prompts and files are processed by the selected model provider under its terms.
       </footer>
     </div>
   );

@@ -1,4 +1,4 @@
-# AI Zone — Local Setup
+# Syntra — Local Setup
 
 ## Prerequisites
 

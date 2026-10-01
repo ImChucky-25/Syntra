@@ -43,7 +43,7 @@ describe('buildModelMessages', () => {
   it('includes the system prompt when provided', () => {
     const result = buildModelMessages({
       history: [mk('user', 5)],
-      systemPrompt: 'You are AI Zone.',
+      systemPrompt: 'You are Syntra.',
       charsPerToken: 4,
       maxInputTokens: 1000,
     });

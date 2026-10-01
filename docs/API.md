@@ -1,4 +1,4 @@
-# AI Zone — API Reference (v1)
+# Syntra — API Reference (v1)
 
 Base URL: `/api/v1` · JSON bodies · Bearer JWT via `Authorization: Bearer <token>`
 (or the `ai_zone_token` HTTP-only cookie). All errors share one shape:

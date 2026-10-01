@@ -2,7 +2,7 @@
   "name": "ai-zone",
   "version": "0.1.0",
   "private": true,
-  "description": "AI Zone — provider-neutral multi-model AI platform (Phase 1: Milestones 1-3)",
+  "description": "Syntra — provider-neutral multi-model AI platform (Phase 1)",
   "workspaces": [
     "apps/*",
     "packages/*"

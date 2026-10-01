@@ -1,4 +1,4 @@
-# AI Zone web — build with Vite, serve with nginx (API proxied at /api)
+# Syntra web — build with Vite, serve with nginx (API proxied at /api)
 FROM node:22-alpine AS build
 WORKDIR /app
 

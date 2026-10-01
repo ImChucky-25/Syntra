@@ -68,7 +68,7 @@ export async function analyzeDocument(req: Request, res: Response, next: NextFun
     });
 
     const system =
-      'You are AI Zone\'s document analysis engine. Work only from the provided documents; ' +
+      'You are Syntra\'s document analysis engine. Work only from the provided documents; ' +
       'distinguish document facts from your own analysis.';
     const userContent =
       TASK_PROMPTS[task] +

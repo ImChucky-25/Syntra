@@ -1,5 +1,5 @@
 /**
- * AI Zone shared DTOs — consumed by both apps/api and apps/web.
+ * Syntra shared DTOs — consumed by both apps/api and apps/web.
  * Kept as plain interfaces/types so both Node and browser bundles can use them.
  */
 
