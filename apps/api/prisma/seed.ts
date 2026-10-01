@@ -180,6 +180,7 @@ async function seedAgents(): Promise<void> {
     }
   }
   console.log('Seeded agents:', agents.map((a) => a.key).join(', '));
+}
 
 main()
   .catch((e) => {
