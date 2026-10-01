@@ -15,6 +15,9 @@ function makeAdapter(adapterKey: string): AIModelAdapter {
     case 'deepseek':
       // DeepSeek exposes an OpenAI-compatible API — reuse the adapter with its own key/endpoint.
       return new OpenAIAdapter(env.deepseekApiKey, env.deepseekBaseUrl, 'deepseek');
+    case 'gemini':
+      // Google Gemini's OpenAI-compatible endpoint — same adapter, own key/base URL.
+      return new OpenAIAdapter(env.geminiApiKey, env.geminiBaseUrl, 'gemini');
     default:
       throw new ProviderError(adapterKey, 'unknown', `No adapter implemented for provider "${adapterKey}"`, 500);
   }

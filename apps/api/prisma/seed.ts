@@ -25,6 +25,12 @@ async function main(): Promise<void> {
     create: { name: 'DeepSeek', adapterKey: 'deepseek', status: 'active', enabled: true },
   });
 
+  const gemini = await prisma.aiProvider.upsert({
+    where: { name: 'Google' },
+    update: { adapterKey: 'gemini', enabled: true, status: 'active' },
+    create: { name: 'Google', adapterKey: 'gemini', status: 'active', enabled: true },
+  });
+
   const models = [
     {
       modelKey: 'gpt-4o-mini',
@@ -97,6 +103,27 @@ async function main(): Promise<void> {
     });
   }
 
+  const geminiModels = [
+    {
+      modelKey: 'gemini-3.8-flash',
+      displayName: 'Gemini 3.8 Flash',
+      capabilities: ['chat', 'tools', 'code', 'long_context'],
+      contextWindow: 1_000_000,
+      maxOutputTokens: 8_192,
+      costPer1kInput: 0.0003,
+      costPer1kOutput: 0.0025,
+    },
+    {
+      modelKey: 'gemini-3.5-flash-lite',
+      displayName: 'Gemini 3.5 Flash Lite',
+      capabilities: ['chat', 'tools', 'long_context'],
+      contextWindow: 1_000_000,
+      maxOutputTokens: 8_192,
+      costPer1kInput: 0.0001,
+      costPer1kOutput: 0.0004,
+    },
+  ];
+
   const deepseekModels = [
     {
       modelKey: 'deepseek-chat',
@@ -133,7 +160,22 @@ async function main(): Promise<void> {
     });
   }
 
-  console.log('Seeded providers + models:', [...models, ...anthropicModels, ...deepseekModels].map((m) => m.modelKey).join(', '));
+  for (const m of geminiModels) {
+    await prisma.aiModel.upsert({
+      where: { providerId_modelKey: { providerId: gemini.id, modelKey: m.modelKey } },
+      update: {
+        displayName: m.displayName,
+        capabilities: m.capabilities,
+        contextWindow: m.contextWindow,
+        maxOutputTokens: m.maxOutputTokens,
+        costPer1kInput: m.costPer1kInput,
+        costPer1kOutput: m.costPer1kOutput,
+      },
+      create: { ...m, providerId: gemini.id },
+    });
+  }
+
+  console.log('Seeded providers + models:', [...models, ...anthropicModels, ...deepseekModels, ...geminiModels].map((m) => m.modelKey).join(', '));
 
   await seedAgents();
   await seedPlans();

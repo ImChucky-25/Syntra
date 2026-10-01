@@ -4,6 +4,7 @@ import ModelHub from './ModelHub';
 import Documents from './Documents';
 import Usage from './Usage';
 import AdminConsole from './AdminConsole';
+import Markdown from './Markdown';
 
 type View = 'chat' | 'model-hub' | 'documents' | 'usage' | 'admin';
 
@@ -351,13 +352,19 @@ export default function ChatWorkspace({ user, onSignOut }: { user: UserDto; onSi
           {messages.map((m) => (
             <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               <div
-                className={`max-w-2xl whitespace-pre-wrap rounded-2xl px-4 py-2.5 text-sm ${
-                  m.role === 'user' ? 'bg-indigo-600 text-white' : 'bg-slate-800 text-slate-100'
+                className={`max-w-2xl rounded-2xl px-4 py-2.5 text-sm ${
+                  m.role === 'user'
+                    ? 'whitespace-pre-wrap bg-indigo-600 text-white'
+                    : 'bg-slate-800 text-slate-100'
                 }`}
               >
-                {m.content || '…'}
-                {m.role === 'assistant' && m.modelKey && (
-                  <div className="mt-1.5 text-[10px] text-slate-500">{m.modelKey}</div>
+                {m.role === 'assistant' ? (
+                  <>
+                    {m.content ? <Markdown text={m.content} /> : <span className="text-slate-400">…</span>}
+                    {m.modelKey && <div className="mt-1.5 text-[10px] text-slate-500">{m.modelKey}</div>}
+                  </>
+                ) : (
+                  m.content || '…'
                 )}
               </div>
             </div>

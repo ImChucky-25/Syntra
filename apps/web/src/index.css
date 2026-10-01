@@ -1,7 +1,37 @@
+@import 'highlight.js/styles/github-dark.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
   @apply bg-slate-950 text-slate-100 antialiased;
+}
+
+/* Assistant Markdown body (spec §4.1: code blocks + Markdown) */
+.md-body > :first-child { margin-top: 0; }
+.md-body > :last-child { margin-bottom: 0; }
+.md-body p { @apply my-2; }
+.md-body h1, .md-body h2, .md-body h3, .md-body h4 {
+  @apply mb-1 mt-3 font-semibold text-slate-100;
+}
+.md-body h1 { @apply text-base; }
+.md-body h2 { @apply text-sm; }
+.md-body h3 { @apply text-sm; }
+.md-body ul { @apply my-2 list-disc pl-5; }
+.md-body ol { @apply my-2 list-decimal pl-5; }
+.md-body li { @apply my-0.5; }
+.md-body code:not(.hljs) {
+  @apply rounded bg-slate-950/80 px-1 py-0.5 font-mono text-[12px] text-indigo-300;
+}
+.md-body blockquote {
+  @apply my-2 border-l-2 border-slate-600 pl-3 text-slate-400;
+}
+.md-body hr { @apply my-3 border-slate-700; }
+.md-body th { @apply font-semibold; }
+
+/* Streaming cursor on the in-flight assistant message */
+.md-body.streaming > :last-child::after {
+  content: '▍';
+  @apply animate-pulse text-indigo-400;
 }

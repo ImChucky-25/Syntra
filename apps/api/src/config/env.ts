@@ -52,6 +52,9 @@ export const env = {
   // DeepSeek exposes an OpenAI-compatible API; the OpenAI adapter is reused.
   deepseekApiKey: process.env.DEEPSEEK_API_KEY ?? '',
   deepseekBaseUrl: process.env.DEEPSEEK_BASE_URL ?? 'https://api.deepseek.com/v1',
+  // Google Gemini also offers an OpenAI-compatible endpoint.
+  geminiApiKey: process.env.GEMINI_API_KEY ?? '',
+  geminiBaseUrl: process.env.GEMINI_BASE_URL ?? 'https://generativelanguage.googleapis.com/v1beta/openai',
   contextCharsPerToken: Number(process.env.CONTEXT_CHARS_PER_TOKEN ?? 4),
   contextMaxInputTokens: Number(process.env.CONTEXT_MAX_INPUT_TOKENS ?? 12_000),
 };
