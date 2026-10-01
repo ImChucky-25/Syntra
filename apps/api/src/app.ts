@@ -34,8 +34,14 @@ export function createApp(): express.Express {
   app.use(cookieParser());
   app.set('trust proxy', 1);
 
-  app.get('/health', (_req, res) => {
-    res.json({ status: 'ok', time: new Date().toISOString() });
+  app.get('/health', async (_req, res) => {
+    // Liveness + DB readiness probe (used by Docker/compose healthchecks).
+    try {
+      await prisma.$queryRaw`SELECT 1`;
+      res.json({ status: 'ok', db: 'up', time: new Date().toISOString() });
+    } catch {
+      res.status(503).json({ status: 'degraded', db: 'down', time: new Date().toISOString() });
+    }
   });
 
   const v1 = express.Router();

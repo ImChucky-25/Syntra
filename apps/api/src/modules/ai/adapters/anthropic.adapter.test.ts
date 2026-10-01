@@ -89,9 +89,14 @@ describe('adapter registry', () => {
     expect(adapter).toBeInstanceOf(AnthropicAdapter);
   });
 
-  it('maps the anthropic adapterKey to a registered adapter without a key', () => {
-    // Without a configured key, construction still must fail as a normalized auth error —
-    // proving the registry resolves the adapterKey to the Anthropic adapter.
+  it('resolves the anthropic adapterKey; without a configured key it fails as normalized auth error', () => {
+    // Environment-aware: with a key configured the registry constructs the
+    // adapter; without one, construction must fail with a ProviderError whose
+    // provider is anthropic — proving the key maps to the Anthropic adapter.
+    if (process.env.ANTHROPIC_API_KEY) {
+      expect(getAdapterForProvider('anthropic')).toBeInstanceOf(AnthropicAdapter);
+      return;
+    }
     try {
       getAdapterForProvider('anthropic');
       expect.unreachable('expected construction to fail without ANTHROPIC_API_KEY');

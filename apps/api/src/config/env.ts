@@ -47,6 +47,8 @@ export const env = {
   openaiBaseUrl: process.env.OPENAI_BASE_URL,
   anthropicApiKey: process.env.ANTHROPIC_API_KEY ?? '',
   anthropicBaseUrl: process.env.ANTHROPIC_BASE_URL,
+  // Required when using an unscoped (user-level) Anthropic API key.
+  anthropicWorkspaceId: process.env.ANTHROPIC_WORKSPACE_ID ?? '',
   contextCharsPerToken: Number(process.env.CONTEXT_CHARS_PER_TOKEN ?? 4),
   contextMaxInputTokens: Number(process.env.CONTEXT_MAX_INPUT_TOKENS ?? 12_000),
 };

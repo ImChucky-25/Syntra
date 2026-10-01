@@ -1,0 +1,16 @@
+node_modules
+**/node_modules
+dist
+**/dist
+build
+coverage
+*.log
+data
+.env
+.env.local
+.env.*
+!.env.example
+.git
+spec.txt
+spec-err.txt
+extract-pdf.js

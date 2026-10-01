@@ -18,6 +18,8 @@
     "dev:web": "npm run dev --workspace @ai-zone/web",
     "db:generate": "npm run db:generate --workspace @ai-zone/api",
     "db:migrate": "npm run db:migrate --workspace @ai-zone/api",
-    "db:seed": "npm run db:seed --workspace @ai-zone/api"
+    "db:seed": "npm run db:seed --workspace @ai-zone/api",
+    "smoke": "node infrastructure/smoke.mjs",
+    "smoke:load": "node infrastructure/smoke.mjs --requests 200 --concurrency 20"
   }
 }

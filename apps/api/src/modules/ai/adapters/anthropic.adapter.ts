@@ -17,6 +17,8 @@ export class AnthropicAdapter implements AIModelAdapter {
       baseURL: baseUrl ?? env.anthropicBaseUrl,
       maxRetries: 1,
       timeout: 120_000,
+      // Unscoped (user-level) keys must target a workspace explicitly.
+      ...(env.anthropicWorkspaceId ? { defaultHeaders: { 'anthropic-workspace-id': env.anthropicWorkspaceId } } : {}),
     });
   }
 
