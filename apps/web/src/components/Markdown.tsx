@@ -35,10 +35,11 @@ function CodeBlock({ children }: { children: React.ReactNode }) {
 /**
  * Renders assistant messages as Markdown: GFM tables/checklists, fenced code
  * with highlight.js classes, and safe links (target=_blank, no referrer).
+ * While `streaming`, a pulsing cursor follows the last block.
  */
-const Markdown = memo(function Markdown({ text }: { text: string }) {
+const Markdown = memo(function Markdown({ text, streaming }: { text: string; streaming?: boolean }) {
   return (
-    <div className="md-body text-sm">
+    <div className={`md-body text-sm${streaming ? ' streaming' : ''}`}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight]}

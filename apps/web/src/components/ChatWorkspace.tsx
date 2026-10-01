@@ -40,6 +40,7 @@ export default function ChatWorkspace({ user, onSignOut }: { user: UserDto; onSi
   const [error, setError] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [search, setSearch] = useState('');
+  const [streamingMessageId, setStreamingMessageId] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const abortRef = useRef<AbortController | null>(null);
 
@@ -108,6 +109,7 @@ export default function ChatWorkspace({ user, onSignOut }: { user: UserDto; onSi
         { id: tempUserId, role: 'user', content },
         { id: tempAssistantId, role: 'assistant', content: '' },
       ]);
+      setStreamingMessageId(tempAssistantId);
 
       const controller = new AbortController();
       abortRef.current = controller;
@@ -143,6 +145,7 @@ export default function ChatWorkspace({ user, onSignOut }: { user: UserDto; onSi
       } finally {
         abortRef.current = null;
         setStreaming(false);
+        setStreamingMessageId(null);
         void refreshConversations();
       }
     },
@@ -360,7 +363,11 @@ export default function ChatWorkspace({ user, onSignOut }: { user: UserDto; onSi
               >
                 {m.role === 'assistant' ? (
                   <>
-                    {m.content ? <Markdown text={m.content} /> : <span className="text-slate-400">…</span>}
+                    {m.content ? (
+                      <Markdown text={m.content} streaming={m.id === streamingMessageId} />
+                    ) : (
+                      <span className="text-slate-400">…</span>
+                    )}
                     {m.modelKey && <div className="mt-1.5 text-[10px] text-slate-500">{m.modelKey}</div>}
                   </>
                 ) : (
