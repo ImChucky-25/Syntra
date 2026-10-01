@@ -19,6 +19,12 @@ async function main(): Promise<void> {
     create: { name: 'Anthropic', adapterKey: 'anthropic', status: 'active', enabled: true },
   });
 
+  const deepseek = await prisma.aiProvider.upsert({
+    where: { name: 'DeepSeek' },
+    update: { adapterKey: 'deepseek', enabled: true, status: 'active' },
+    create: { name: 'DeepSeek', adapterKey: 'deepseek', status: 'active', enabled: true },
+  });
+
   const models = [
     {
       modelKey: 'gpt-4o-mini',
@@ -91,7 +97,43 @@ async function main(): Promise<void> {
     });
   }
 
-  console.log('Seeded providers + models:', [...models, ...anthropicModels].map((m) => m.modelKey).join(', '));
+  const deepseekModels = [
+    {
+      modelKey: 'deepseek-chat',
+      displayName: 'DeepSeek V3',
+      capabilities: ['chat', 'tools', 'code', 'long_context'],
+      contextWindow: 64_000,
+      maxOutputTokens: 8_192,
+      costPer1kInput: 0.00014,
+      costPer1kOutput: 0.00028,
+    },
+    {
+      modelKey: 'deepseek-reasoner',
+      displayName: 'DeepSeek R1',
+      capabilities: ['chat', 'code', 'long_context'],
+      contextWindow: 64_000,
+      maxOutputTokens: 8_192,
+      costPer1kInput: 0.00055,
+      costPer1kOutput: 0.00219,
+    },
+  ];
+
+  for (const m of deepseekModels) {
+    await prisma.aiModel.upsert({
+      where: { providerId_modelKey: { providerId: deepseek.id, modelKey: m.modelKey } },
+      update: {
+        displayName: m.displayName,
+        capabilities: m.capabilities,
+        contextWindow: m.contextWindow,
+        maxOutputTokens: m.maxOutputTokens,
+        costPer1kInput: m.costPer1kInput,
+        costPer1kOutput: m.costPer1kOutput,
+      },
+      create: { ...m, providerId: deepseek.id },
+    });
+  }
+
+  console.log('Seeded providers + models:', [...models, ...anthropicModels, ...deepseekModels].map((m) => m.modelKey).join(', '));
 
   await seedAgents();
   await seedPlans();
@@ -107,7 +149,7 @@ async function seedPlans(): Promise<void> {
       limits: {
         monthlyRequestLimit: 100,
         monthlyTokenLimit: 200_000,
-        allowedModels: ['gpt-4o-mini', 'claude-3-5-haiku-20241022'],
+        allowedModels: ['gpt-4o-mini', 'claude-3-5-haiku-20241022', 'deepseek-chat'],
         maxFilesPerMonth: 5,
         maxUploadBytes: 10_000_000,
       },

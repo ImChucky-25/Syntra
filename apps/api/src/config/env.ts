@@ -49,6 +49,9 @@ export const env = {
   anthropicBaseUrl: process.env.ANTHROPIC_BASE_URL,
   // Required when using an unscoped (user-level) Anthropic API key.
   anthropicWorkspaceId: process.env.ANTHROPIC_WORKSPACE_ID ?? '',
+  // DeepSeek exposes an OpenAI-compatible API; the OpenAI adapter is reused.
+  deepseekApiKey: process.env.DEEPSEEK_API_KEY ?? '',
+  deepseekBaseUrl: process.env.DEEPSEEK_BASE_URL ?? 'https://api.deepseek.com/v1',
   contextCharsPerToken: Number(process.env.CONTEXT_CHARS_PER_TOKEN ?? 4),
   contextMaxInputTokens: Number(process.env.CONTEXT_MAX_INPUT_TOKENS ?? 12_000),
 };

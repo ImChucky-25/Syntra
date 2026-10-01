@@ -1,4 +1,5 @@
 import { ProviderError } from '../../lib/errors.js';
+import { env } from '../../config/env.js';
 import type { AIModelAdapter } from './adapters/adapter.interface.js';
 import { OpenAIAdapter } from './adapters/openai.adapter.js';
 import { AnthropicAdapter } from './adapters/anthropic.adapter.js';
@@ -11,6 +12,9 @@ function makeAdapter(adapterKey: string): AIModelAdapter {
       return new OpenAIAdapter();
     case 'anthropic':
       return new AnthropicAdapter();
+    case 'deepseek':
+      // DeepSeek exposes an OpenAI-compatible API — reuse the adapter with its own key/endpoint.
+      return new OpenAIAdapter(env.deepseekApiKey, env.deepseekBaseUrl, 'deepseek');
     default:
       throw new ProviderError(adapterKey, 'unknown', `No adapter implemented for provider "${adapterKey}"`, 500);
   }

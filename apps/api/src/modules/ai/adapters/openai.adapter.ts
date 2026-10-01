@@ -4,13 +4,14 @@ import { ProviderError } from '../../../lib/errors.js';
 import type { AIModelAdapter, GenerateInput, GenerateOutput, StreamEvent } from './adapter.interface.js';
 
 export class OpenAIAdapter implements AIModelAdapter {
-  readonly providerKey = 'openai';
+  readonly providerKey: string;
   private client: OpenAI;
 
-  constructor(apiKey?: string, baseUrl?: string) {
+  constructor(apiKey?: string, baseUrl?: string, providerKey: string = 'openai') {
+    this.providerKey = providerKey;
     const key = apiKey ?? env.openaiApiKey;
     if (!key) {
-      throw new ProviderError('openai', 'auth', 'OPENAI_API_KEY is not configured', 500);
+      throw new ProviderError(this.providerKey, 'auth', `${this.providerKey.toUpperCase()}_API_KEY is not configured`, 500);
     }
     this.client = new OpenAI({
       apiKey: key,
@@ -37,7 +38,7 @@ export class OpenAIAdapter implements AIModelAdapter {
         finishReason: choice?.finish_reason ?? undefined,
       };
     } catch (err) {
-      throw normalizeOpenAiError(err);
+      throw normalizeOpenAiError(err, this.providerKey);
     }
   }
 
@@ -62,26 +63,26 @@ export class OpenAIAdapter implements AIModelAdapter {
         }
       }
     } catch (err) {
-      yield { type: 'error', code: 'provider_error', message: normalizeOpenAiError(err).message };
+      yield { type: 'error', code: 'provider_error', message: normalizeOpenAiError(err, this.providerKey).message };
     }
   }
 }
 
-export function normalizeOpenAiError(err: unknown): ProviderError {
+export function normalizeOpenAiError(err: unknown, providerKey = 'openai'): ProviderError {
   const anyErr = err as { status?: number; message?: string; code?: string };
   const status = anyErr?.status;
-  if (status === 401) return new ProviderError('openai', 'auth', 'Provider rejected credentials', 502);
-  if (status === 429) return new ProviderError('openai', 'rate_limit', 'Provider rate limit reached', 429);
+  if (status === 401) return new ProviderError(providerKey, 'auth', 'Provider rejected credentials', 502);
+  if (status === 429) return new ProviderError(providerKey, 'rate_limit', 'Provider rate limit reached', 429);
   if (status === 404 || status === 400) {
-    return new ProviderError('openai', 'invalid_request', anyErr?.message ?? 'Invalid request to provider', 502);
+    return new ProviderError(providerKey, 'invalid_request', anyErr?.message ?? 'Invalid request to provider', 502);
   }
   if (status !== undefined && status >= 500) {
-    return new ProviderError('openai', 'availability', 'Provider unavailable', 502);
+    return new ProviderError(providerKey, 'availability', 'Provider unavailable', 502);
   }
   if (anyErr?.code === 'ETIMEDOUT' || anyErr?.message?.toLowerCase().includes('timeout')) {
-    return new ProviderError('openai', 'timeout', 'Provider request timed out', 504);
+    return new ProviderError(providerKey, 'timeout', 'Provider request timed out', 504);
   }
-  return new ProviderError('openai', 'unknown', anyErr?.message ?? 'Unknown provider error', 502);
+  return new ProviderError(providerKey, 'unknown', anyErr?.message ?? 'Unknown provider error', 502);
 }
 // END_OF_ADAPTER
 

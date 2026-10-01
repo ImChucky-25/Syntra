@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import { env } from './config/env.js';
+import { prisma } from './lib/prisma.js';
 import authRoutes from './modules/auth/auth.routes.js';
 import conversationsRoutes from './modules/conversations/conversations.routes.js';
 import { listModels } from './modules/models/models.controller.js';
