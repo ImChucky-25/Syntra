@@ -6,7 +6,7 @@ const FEATURES = [
   {
     icon: '🤖',
     title: 'Multi-model chat',
-    text: 'One workspace for OpenAI, Anthropic, and DeepSeek. Pick a model or let capability-based routing choose the best fit.',
+    text: 'One workspace for OpenAI, Anthropic, DeepSeek, and Gemini. Pick a model or let capability-based routing choose the best fit.',
   },
   {
     icon: '⚡',
@@ -80,7 +80,7 @@ const PLANS = [
   },
 ];
 
-const MODEL_PROVIDERS = ['OpenAI', 'Anthropic', 'DeepSeek'];
+const MODEL_PROVIDERS = ['OpenAI', 'Anthropic', 'DeepSeek', 'Gemini'];
 
 export default function Landing({ onEnter }: LandingProps) {
   return (
