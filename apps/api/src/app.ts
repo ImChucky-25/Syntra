@@ -12,6 +12,8 @@ import agentsRoutes from './modules/agents/agents.routes.js';
 import runsRoutes from './modules/agents/runs.routes.js';
 import filesRoutes from './modules/files/files.routes.js';
 import { analyzeDocument } from './modules/files/documents.controller.js';
+import adminRoutes from './modules/admin/admin.routes.js';
+import { getSubscription } from './modules/billing/billing.controller.js';
 import { handleChatStream } from './modules/ai/chat.controller.js';
 import { requireAuth } from './middleware/auth.middleware.js';
 import { rateLimit } from './middleware/rate-limit.js';
@@ -41,12 +43,14 @@ export function createApp(): express.Express {
   v1.use('/conversations', conversationsRoutes);
   v1.get('/models', requireAuth, listModels);
   v1.get('/usage', requireAuth, getUsageSummary);
+  v1.get('/subscriptions', requireAuth, getSubscription);
   v1.get('/preferences', requireAuth, getPreferences);
   v1.patch('/preferences', requireAuth, updatePreferences);
   v1.use('/agents', agentsRoutes);
   v1.use('/runs', runsRoutes);
   v1.use('/files', filesRoutes);
   v1.post('/documents/:id/analyze', requireAuth, analyzeDocument);
+  v1.use('/admin', adminRoutes);
   v1.post('/chat/stream', requireAuth, rateLimit({ windowMs: 60_000, max: 30, name: 'chat' }), handleChatStream);
 
   app.use('/api/v1', v1);

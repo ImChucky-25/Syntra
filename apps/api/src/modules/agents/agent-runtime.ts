@@ -5,6 +5,7 @@ import { selectModel } from '../ai/chat.service.js';
 import { getAdapterForProvider } from '../ai/adapter-registry.js';
 import { recordUsage } from '../ai/usage-tracker.js';
 import { estimateTokens } from '../ai/context-manager.js';
+import { enforceUsageLimits, getEntitlementSnapshot, isModelAllowed } from '../billing/entitlements.js';
 import { parseToolCalls } from './tool-parser.js';
 import { parseToolPolicy, checkToolPermission, ToolCallBudget, type ToolPolicy } from './tool-policy.js';
 import { getTool } from './tools/tool.registry.js';
@@ -226,12 +227,17 @@ export async function executeAgentRun(
   if (input.length > 32_000) throw new ProviderError('agent', 'invalid_request', 'Agent input too long', 400);
 
   const policy = parseToolPolicy(agent.toolPolicy);
+  await enforceUsageLimits(config.userId);
   const model = await selectModel({
     modelKey: config.modelKey ?? null,
     conversationPreference: null,
     expectedInputTokens: estimateTokens(input, env.contextCharsPerToken),
     userId: config.userId,
   });
+  const entitlement = await getEntitlementSnapshot(config.userId);
+  if (!isModelAllowed(entitlement.limits, model.modelKey)) {
+    throw new ProviderError('agent', 'invalid_request', `Model "${model.modelKey}" is not included in the ${entitlement.planName} plan`, 403);
+  }
 
   const run = await prisma.agentRun.create({
     data: {

@@ -4,7 +4,10 @@ import { prisma } from '../../lib/prisma.js';
 export async function getUsageSummary(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     if (!req.user) throw new Error('unauthorized');
-    const since = new Date(Date.now() - 30 * 24 * 3600_000);
+    // Configurable window (days), clamped to a sane range; defaults to 30.
+    const daysRaw = Number(req.query.days ?? 30);
+    const days = Number.isFinite(daysRaw) ? Math.min(Math.max(Math.trunc(daysRaw), 1), 365) : 30;
+    const since = new Date(Date.now() - days * 24 * 3600_000);
 
     const records = await prisma.usageRecord.findMany({
       where: { userId: req.user.id, createdAt: { gte: since } },

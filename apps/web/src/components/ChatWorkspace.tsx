@@ -2,8 +2,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { api, streamChat, type UserDto } from '../api';
 import ModelHub from './ModelHub';
 import Documents from './Documents';
+import Usage from './Usage';
+import AdminConsole from './AdminConsole';
 
-type View = 'chat' | 'model-hub' | 'documents';
+type View = 'chat' | 'model-hub' | 'documents' | 'usage' | 'admin';
 
 interface Message {
   id: string;
@@ -193,6 +195,22 @@ export default function ChatWorkspace({ user, onSignOut }: { user: UserDto; onSi
     );
   }
 
+  if (view === 'usage') {
+    return (
+      <div className="flex h-screen flex-col bg-slate-950 text-slate-100">
+        <Usage onBack={() => setView('chat')} />
+      </div>
+    );
+  }
+
+  if (view === 'admin') {
+    return (
+      <div className="flex h-screen flex-col bg-slate-950 text-slate-100">
+        <AdminConsole onBack={() => setView('chat')} />
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen">
       {/* Mobile backdrop */}
@@ -239,6 +257,26 @@ export default function ChatWorkspace({ user, onSignOut }: { user: UserDto; onSi
           >
             <span aria-hidden="true">📄</span> Documents
           </button>
+          <button
+            onClick={() => {
+              setView('usage');
+              setSidebarOpen(false);
+            }}
+            className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-slate-800"
+          >
+            <span aria-hidden="true">📊</span> Usage & Plan
+          </button>
+          {user.role === 'ADMIN' && (
+            <button
+              onClick={() => {
+                setView('admin');
+                setSidebarOpen(false);
+              }}
+              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-slate-800"
+            >
+              <span aria-hidden="true">🛡️</span> Admin console
+            </button>
+          )}
         </nav>
         <div className="px-4 pb-2">
           <input

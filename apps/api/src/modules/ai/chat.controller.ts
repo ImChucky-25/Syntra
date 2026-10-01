@@ -4,6 +4,7 @@ import type { ChatStreamEvent } from '@ai-zone/shared-types';
 import { buildChatContext, loadConversationForUser } from './chat.service.js';
 import { getAdapterForProvider } from './adapter-registry.js';
 import { recordUsage } from './usage-tracker.js';
+import { enforceUsageLimits, isModelAllowed, getEntitlementSnapshot } from '../billing/entitlements.js';
 import { env } from '../../config/env.js';
 import { prisma } from '../../lib/prisma.js';
 import { logger } from '../../lib/logger.js';
@@ -36,12 +37,21 @@ export async function handleChatStream(req: Request, res: Response): Promise<voi
       return;
     }
 
+    // Server-side entitlement enforcement (spec §12.2: never trust frontend counters).
+    await enforceUsageLimits(user.id);
+
     const ctx = await buildChatContext({
       userId: user.id,
       conversationId: body.conversationId,
       userText: body.content.trim(),
       modelKey: body.modelKey,
     });
+
+    const entitlement = await getEntitlementSnapshot(user.id);
+    if (!isModelAllowed(entitlement.limits, ctx.model.modelKey)) {
+      fail(403, 'plan_limit', `Model "${ctx.model.modelKey}" is not included in the ${entitlement.planName} plan`);
+      return;
+    }
 
     sseHeaders(res);
     const assistantMessageId = crypto.randomUUID();

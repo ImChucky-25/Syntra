@@ -94,6 +94,73 @@ async function main(): Promise<void> {
   console.log('Seeded providers + models:', [...models, ...anthropicModels].map((m) => m.modelKey).join(', '));
 
   await seedAgents();
+  await seedPlans();
+}
+
+/** Subscription plans with entitlement limits (spec §12.1, §10.2 plans table). */
+async function seedPlans(): Promise<void> {
+  const plans = [
+    {
+      key: 'free',
+      name: 'Free',
+      priceUsd: 0,
+      limits: {
+        monthlyRequestLimit: 100,
+        monthlyTokenLimit: 200_000,
+        allowedModels: ['gpt-4o-mini', 'claude-3-5-haiku-20241022'],
+        maxFilesPerMonth: 5,
+        maxUploadBytes: 10_000_000,
+      },
+    },
+    {
+      key: 'pro',
+      name: 'Pro',
+      priceUsd: 20,
+      limits: {
+        monthlyRequestLimit: 2_000,
+        monthlyTokenLimit: 5_000_000,
+        allowedModels: '*',
+        maxFilesPerMonth: 200,
+        maxUploadBytes: 100_000_000,
+      },
+    },
+    {
+      key: 'team',
+      name: 'Team',
+      priceUsd: 60,
+      limits: {
+        monthlyRequestLimit: 10_000,
+        monthlyTokenLimit: 25_000_000,
+        allowedModels: '*',
+        maxFilesPerMonth: 1_000,
+        maxUploadBytes: 500_000_000,
+      },
+    },
+  ];
+
+  for (const plan of plans) {
+    await prisma.plan.upsert({
+      where: { key: plan.key },
+      update: { name: plan.name, limits: plan.limits, priceUsd: plan.priceUsd, active: true },
+      create: plan,
+    });
+  }
+
+  // Backfill: every user without an active subscription gets Free for the current month.
+  const now = new Date();
+  const periodStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+  const periodEnd = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1));
+  const freePlan = await prisma.plan.findUniqueOrThrow({ where: { key: 'free' } });
+  const users = await prisma.user.findMany({
+    where: { subscriptions: { none: { status: 'active', periodEnd: { gt: now } } } },
+    select: { id: true },
+  });
+  for (const user of users) {
+    await prisma.subscription.create({
+      data: { userId: user.id, planId: freePlan.id, status: 'active', periodStart, periodEnd },
+    });
+  }
+  console.log('Seeded plans:', plans.map((p) => p.key).join(', '), `(${users.length} users backfilled to Free)`);
 }
 
 /** Versioned agent configurations (spec §7, §10.2 — agents table with version + toolPolicy). */

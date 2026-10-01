@@ -82,7 +82,73 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(data),
     }),
+
+  getSubscription: () =>
+    request<{ subscription: SubscriptionDto }>('/subscriptions'),
+
+  getUsage: (days = 30) => request<UsageSummary>(`/usage?days=${days}`),
+
+  adminOverview: () => request<{ overview: AdminOverview }>('/admin/overview'),
+
+  adminListUsers: (q?: string) =>
+    request<{ users: AdminUserDto[] }>(`/admin/users${q ? `?q=${encodeURIComponent(q)}` : ''}`),
+
+  adminPatchUser: (
+    id: string,
+    data: { role?: 'USER' | 'ADMIN'; isActive?: boolean; planKey?: string },
+  ) => request<{ user: { id: string; email: string; role: string; isActive: boolean } }>(`/admin/users/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  }),
+
+  adminPatchModel: (id: string, enabled: boolean) =>
+    request<{ model: { id: string; modelKey: string; enabled: boolean } }>(`/admin/models/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ enabled }),
+    }),
 };
+
+export interface SubscriptionDto {
+  planKey: string;
+  planName: string;
+  periodStart: string;
+  periodEnd: string;
+  limits: {
+    monthlyRequestLimit: number;
+    monthlyTokenLimit: number;
+    allowedModels: '*' | string[];
+    maxFilesPerMonth: number;
+    maxUploadBytes: number;
+  };
+  usage: { requests: number; inputTokens: number; outputTokens: number; totalTokens: number };
+}
+
+export interface UsageSummary {
+  totals: { requests: number; inputTokens: number; outputTokens: number; costAmount: number };
+  byModel: Array<{ modelId: string; modelKey: string; requests: number; inputTokens: number; outputTokens: number; costAmount: number }>;
+  daily: Array<{ date: string; requests: number; inputTokens: number; outputTokens: number; costAmount: number }>;
+}
+
+export interface AdminOverview {
+  users: number;
+  activeSubscriptions: number;
+  conversations: number;
+  enabledModels: number;
+  providers: Array<{ id: string; name: string; status: string; enabled: boolean }>;
+  usage30d: { requests: number; inputTokens: number; outputTokens: number; costUsd: number };
+}
+
+export interface AdminUserDto {
+  id: string;
+  email: string;
+  displayName: string;
+  role: string;
+  isActive: boolean;
+  createdAt: string;
+  plan: { key: string; name: string };
+  conversationCount: number;
+  usageCount: number;
+}
 
 export interface FileDto {
   id: string;

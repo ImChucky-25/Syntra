@@ -1,7 +1,8 @@
 import type { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { prisma } from '../../lib/prisma.js';
-import { NotFoundError, ValidationError } from '../../lib/errors.js';
+import { NotFoundError, RateLimitError, ValidationError } from '../../lib/errors.js';
+import { getEntitlementSnapshot } from '../billing/entitlements.js';
 import { getStorage } from './storage.js';
 import { extractText, sniffContent, MAX_FILE_BYTES } from './extract.js';
 import type { FileStatus } from '@prisma/client';
@@ -29,6 +30,23 @@ export async function uploadFile(req: Request, res: Response, next: NextFunction
     }
     if (file.size > MAX_FILE_BYTES) {
       throw new ValidationError('File exceeds the 10 MB limit');
+    }
+
+    // Upload entitlements (spec §12.2): plan caps on monthly uploads + storage.
+    const entitlement = await getEntitlementSnapshot(user.id);
+    const monthly = await prisma.file.aggregate({
+      where: { userId: user.id, createdAt: { gte: entitlement.periodStart } },
+      _count: { id: true },
+      _sum: { sizeBytes: true },
+    });
+    if (entitlement.limits.maxFilesPerMonth > 0 && monthly._count.id >= entitlement.limits.maxFilesPerMonth) {
+      throw new RateLimitError(`Monthly upload limit reached (${entitlement.limits.maxFilesPerMonth})`);
+    }
+    if (
+      entitlement.limits.maxUploadBytes > 0 &&
+      (monthly._sum.sizeBytes ?? 0) + file.size > entitlement.limits.maxUploadBytes
+    ) {
+      throw new RateLimitError('Monthly upload storage limit reached');
     }
 
     const sniffed = sniffContent(file.buffer);
